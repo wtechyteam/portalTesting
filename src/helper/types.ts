@@ -28,8 +28,8 @@ export interface SubmenuItem {
  * Interface for api response
  */
 export interface APIResponse {
-    payload: any;
-    message: string; 
+    token: string;
+    user: UserProfile; 
 }
 
 /**
@@ -37,8 +37,9 @@ export interface APIResponse {
  */
 export interface UserProfile {
     name: string;
-    avatar: string;
-    emailId: string;
+  avatar: string;
+  emailId: string;
+  token?: string; 
 }
 
 

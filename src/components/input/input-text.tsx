@@ -1,42 +1,39 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 interface InputTextProps {
   labelTitle: string;
   labelStyle?: string;
   type?: string;
   containerStyle?: string;
-  defaultValue?: string;
+  value: string; // Change defaultValue to value
   placeholder?: string;
-  updateFormValue: (updateType: string, value: string) => void; // Updated function signature
+  updateFormValue: (updateType: string, value: string) => void;
   updateType: string;
 }
 
 function InputText({
   labelTitle,
   labelStyle,
-  type,
-  containerStyle,
-  defaultValue,
-  placeholder,
+  type = 'text', // Set default value for type
+  containerStyle = '', // Set default value for containerStyle
+  value, // Change to accept value directly
+  placeholder = '', // Set default value for placeholder
   updateFormValue,
   updateType,
 }: InputTextProps): JSX.Element {
-  const [value, setValue] = useState<string>(defaultValue || '');
-
   const updateInputValue = (val: string): void => {
-    setValue(val);
     updateFormValue(updateType, val); // Pass both updateType and value
   };
 
   return (
     <div className={`form-control w-full ${containerStyle}`}>
       <label className="label">
-        <span className={'label-text text-xs text-base-content ' + (labelStyle || '')}>{labelTitle}</span>
+        <span className={`label-text text-xs text-base-content ${labelStyle || ''}`}>{labelTitle}</span>
       </label>
       <input
-        type={type || 'text'}
-        value={value}
-        placeholder={placeholder || ''}
+        type={type}
+        value={value} // Use the value prop
+        placeholder={placeholder}
         onChange={(e) => updateInputValue(e.target.value)}
         className="input input-bordered w-full"
       />

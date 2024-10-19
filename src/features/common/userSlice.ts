@@ -9,28 +9,91 @@ export const getUserInfo = createAsyncThunk<UserProfile, void>(
     async (thunkApi) => {
         // const response = await axios.get<APIResponse>("/workspace/home");
         // return response.data.payload;
-        return {name: "Alex", avatar : "https://reqres.in/img/faces/7-image.jpg", emailId : ""}
+        return { name: "Alex", avatar: "https://reqres.in/img/faces/7-image.jpg", emailId: "" }
     }
-  );
+);
 
-const initialState: UserProfile = {
+// userSlice.ts
+
+
+export const registerUser = createAsyncThunk<
+  UserProfile, // Return type
+  { name: string; email: string; password: string; role: string }, // Argument type
+  { rejectValue: string } // Reject value type
+>(
+  'user/register',
+  async (userData, { rejectWithValue }) => {
+    try {
+      const response = await fetch('http://localhost:5000/api/users/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(userData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Registration failed');
+      }
+
+      const data = await response.json();
+      return { ...data, token: data.token }; // Make sure to include the token here
+    } catch (error) {
+      if (error instanceof Error) {
+        return rejectWithValue(error.message);
+      }
+      return rejectWithValue('Something went wrong');
+    }
+  }
+);
+
+export const loginUser = createAsyncThunk<
+  UserProfile, // Return type
+  { email: string; password: string }, // Argument type
+  { rejectValue: string } // Reject value type
+>(
+  'user/login',
+  async (userData, { rejectWithValue }) => {
+    try {
+      const response = await fetch('http://localhost:5000/api/users/login', { // Update with your actual login API endpoint
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(userData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Login failed');
+      }
+
+      const data = await response.json();
+      return { ...data, token: data.token }; // Ensure the token is included in the response
+    } catch (error) {
+      if (error instanceof Error) {
+        return rejectWithValue(error.message);
+      }
+      return rejectWithValue('Something went wrong');
+    }
+  }
+);
+
+
+const initialState: UserProfile & { token?: string } = {
     name: "",
     avatar: "",
     emailId: "",
+    token: "",
 };
 
 export const userSlice = createSlice({
     name: 'user',
     initialState,
     reducers: {
-        
 
-       
+
+
     },
 
     extraReducers: (builder) => {
         builder.addCase(getUserInfo.pending, (state) => {
-            
+
         });
         builder.addCase(getUserInfo.fulfilled, (state, action) => {
             console.log(action.payload)
@@ -38,11 +101,24 @@ export const userSlice = createSlice({
             state.avatar = action.payload.avatar
         });
         builder.addCase(getUserInfo.rejected, (state) => {
-            
+
         });
+        builder.addCase(registerUser.fulfilled, (state, action) => {
+            state.name = action.payload.name;
+            state.avatar = action.payload.avatar;
+            state.emailId = action.payload.emailId;
+            state.token = action.payload.token;
+        });
+        builder.addCase(loginUser.fulfilled, (state, action) => {
+            state.name = action.payload.name;
+            state.avatar = action.payload.avatar;
+            state.emailId = action.payload.emailId;
+            state.token = action.payload.token;
+        });
+        
     }
 });
 
-export const {  } = userSlice.actions;
+export const { } = userSlice.actions;
 
 export default userSlice.reducer;
