@@ -1,68 +1,60 @@
-"use client"
+"use client";
 
 import XMarkIcon from '@heroicons/react/24/outline/XMarkIcon';
 import Link from 'next/link';
 import SidebarSubmenu from './sidebar-submenu';
 import routes from '@/helper/sidebar-routes';
-import { usePathname } from 'next/navigation'
+import { usePathname } from 'next/navigation';
 import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '@/lib/hooks';
 import { setPageTitle } from '@/features/common/headerSlice';
 import { UserProfile } from '@/helper/types';
-import BookmarkSquareIcon from '@heroicons/react/24/outline/BookmarkSquareIcon'
-import ChevronUpIcon from '@heroicons/react/24/outline/ChevronUpIcon'
-import ArrowUpOnSquareIcon from '@heroicons/react/24/outline/ArrowUpOnSquareIcon'
+import BookmarkSquareIcon from '@heroicons/react/24/outline/BookmarkSquareIcon';
+import ChevronUpIcon from '@heroicons/react/24/outline/ChevronUpIcon';
+import ArrowUpOnSquareIcon from '@heroicons/react/24/outline/ArrowUpOnSquareIcon';
 import { getUserInfo } from '@/features/common/userSlice';
 import auth from '@/lib/auth';
 
 interface LeftSidebarProps {}
 
-
-
 function LeftSidebar(props: LeftSidebarProps) {
-    const pathname = usePathname()
-    const dispatch = useAppDispatch()
+    const pathname = usePathname();
+    const dispatch = useAppDispatch();
+    const user = useAppSelector((state) => state.user);
 
     const close = () => {
         const leftSidebarDrawer = document.getElementById('left-sidebar-drawer');
         if (leftSidebarDrawer) leftSidebarDrawer.click();
     };
-    const user = useAppSelector((state) => state.user);
-
 
     useEffect(() => {
-        console.log(pathname)
-        let routeObj = routes.filter((r) => {return r.path == pathname})[0]
-        if(routeObj){
-            dispatch(setPageTitle({title : routeObj.pageTitle}))
-        }else{
-            const secondSlashIndex = pathname.indexOf('/', pathname.indexOf('/') + 1)
+        const routeObj = routes.find((r) => r.path === pathname);
+        if (routeObj) {
+            dispatch(setPageTitle({ title: routeObj.pageTitle }));
+        } else {
+            const secondSlashIndex = pathname.indexOf('/', pathname.indexOf('/') + 1);
             if (secondSlashIndex !== -1) {
                 const substringBeforeSecondSlash = pathname.substring(0, secondSlashIndex);
-                let submenuRouteObj = routes.filter((r) => {return r.path == substringBeforeSecondSlash})[0]
-                if(submenuRouteObj.submenu){
-                    let submenuObj = submenuRouteObj.submenu.filter((r) => {return r.path == pathname})[0]
-                    console.log("herere", submenuObj)
-                    dispatch(setPageTitle({title : submenuObj.pageTitle}))
-                    
+                const submenuRouteObj = routes.find((r) => r.path === substringBeforeSecondSlash);
+                if (submenuRouteObj?.submenu) {
+                    const submenuObj = submenuRouteObj.submenu.find((r) => r.path === pathname);
+                    if (submenuObj) {
+                        dispatch(setPageTitle({ title: submenuObj.pageTitle }));
+                    }
                 }
             }
         }
-    }, [pathname])
-
+    }, [pathname]);
 
     useEffect(() => {
-        dispatch(getUserInfo())
-    }, [])
+        const userId = "your-user-id"; // Replace this with the actual user ID or method to retrieve it
+        dispatch(getUserInfo(userId)); // Pass the required argument
+    }, [dispatch]);
 
     const logoutUser = async () => {
-        console.log("here")
-        await auth.logout()
-        window.location.href = '/'
-      }
-
-      
-
+        await auth.logout();
+        window.location.href = '/';
+    };
 
     return (
         <div className="drawer-side z-30 overflow-hidden">
@@ -89,8 +81,7 @@ function LeftSidebar(props: LeftSidebarProps) {
                             ) : (
                                 <Link
                                     href={route.path}
-                                    className={`${pathname == route.path ? 'font-semibold bg-base-200 ' : 'font-normal'}`
-                                    }
+                                    className={`${pathname === route.path ? 'font-semibold bg-base-200 ' : 'font-normal'}`}
                                 >
                                     {route.icon} {route.pageName}
                                     {pathname === route.path ? (
@@ -107,17 +98,28 @@ function LeftSidebar(props: LeftSidebarProps) {
             </ul>
             {/* Profile icon, opening menu on click */}
             <div className="dropdown bottom-0 absolute dropdown-top w-80 ">
-            <div tabIndex={0} role="button" className="btn w-full bg-base-100 text-left justify-start ">
-                <div className="avatar">
-                <div className="w-6 rounded-full">
-                    <img src={user.avatar} />
+                <div tabIndex={0} role="button" className="btn w-full bg-base-100 text-left justify-start ">
+                    <div className="avatar">
+                        <div className="w-6 rounded-full">
+                            <img src={user.avatar} alt={user.name} />
+                        </div>
+                    </div>
+                    <span className="ml-2">{user.name || 'User'}</span>
+                    <ChevronUpIcon className='w-4 ' />
                 </div>
-                </div>{user.name}<ChevronUpIcon className='w-4 ' /></div>
-            <ul tabIndex={0} className="dropdown-content visible w-52 px-4 z-[1]  menu  shadow bg-base-200 rounded-box ">
-                <li className=""><Link href={'/settings/billing'}><BookmarkSquareIcon className='w-4 ' />Bill History</Link></li>
-                <div className="divider py-2 m-0"></div>
-                <li onClick={() => logoutUser()}><a className=' ' ><ArrowUpOnSquareIcon className='w-4 ' />Logout</a></li>
-            </ul>
+                <ul tabIndex={0} className="dropdown-content visible w-52 px-4 z-[1] menu shadow bg-base-200 rounded-box ">
+                    <li className="">
+                        <Link href={'/settings/billing'}>
+                            <BookmarkSquareIcon className='w-4 ' />Bill History
+                        </Link>
+                    </li>
+                    <div className="divider py-2 m-0"></div>
+                    <li onClick={() => logoutUser()}>
+                        <a className=' ' >
+                            <ArrowUpOnSquareIcon className='w-4 ' />Logout
+                        </a>
+                    </li>
+                </ul>
             </div>
         </div>
     );

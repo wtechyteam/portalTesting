@@ -95,52 +95,61 @@ function Signup(): JSX.Element {
                                 <p className="text-center text-lg md:mt-0 mt-6 mb-12 font-semibold">Create an Account</p>
 
                                 <InputText
-    type="text"
-    value={formData.name} // Pass the value from state
-    updateType="name"
-    containerStyle="mt-4"
-    labelTitle="Enter your Name"
-    placeholder="Ex - John Doe"
-    updateFormValue={updateFormValue}
-/>
+                                    type="text"
+                                    value={formData.name} // Pass the value from state
+                                    updateType="name"
+                                    containerStyle="mt-4"
+                                    labelTitle="Enter your Name"
+                                    placeholder="Ex - John Doe"
+                                    updateFormValue={updateFormValue}
+                                />
 
-<InputText
-    type="email"
-    value={signupObj.emailId} // Pass the value from state
-    updateType="emailId"
-    containerStyle="mt-4"
-    labelTitle="Enter your Email Id"
-    placeholder="Ex - dashwind@gmail.com"
-    updateFormValue={updateFormValue}
-/>
+                                <InputText
+                                    type="email"
+                                    value={signupObj.emailId} // Pass the value from state
+                                    updateType="emailId"
+                                    containerStyle="mt-4"
+                                    labelTitle="Enter your Email Id"
+                                    placeholder="Ex - dashwind@gmail.com"
+                                    updateFormValue={updateFormValue}
+                                />
 
-<InputText
-    type="password"
-    value={signupObj.password} // Pass the value from state
-    updateType="password"
-    containerStyle="mt-4"
-    labelTitle="Enter your Password"
-    placeholder="Enter your password"
-    updateFormValue={updateFormValue}
-/>
+                                <InputText
+                                    type="password"
+                                    value={signupObj.password} // Pass the value from state
+                                    updateType="password"
+                                    containerStyle="mt-4"
+                                    labelTitle="Enter your Password"
+                                    placeholder="Enter your password"
+                                    updateFormValue={updateFormValue}
+                                />
 
-<InputText
-    type="password"
-    value={signupObj.confirmPassword} // Pass the value from state
-    updateType="confirmPassword"
-    containerStyle="mt-4"
-    labelTitle="Confirm your Password"
-    placeholder="Confirm your password"
-    updateFormValue={updateFormValue}
-/>
+                                <InputText
+                                    type="password"
+                                    value={signupObj.confirmPassword} // Pass the value from state
+                                    updateType="confirmPassword"
+                                    containerStyle="mt-4"
+                                    labelTitle="Confirm your Password"
+                                    placeholder="Confirm your password"
+                                    updateFormValue={updateFormValue}
+                                />
 
 
-                                <select onChange={(e) => updateRole(e.target.value)} value={formData.role} className="mt-4">
-                                    <option value="">Select Role</option>
-                                    <option value="staff">Staff</option>
-                                    <option value="admin">Admin</option>
-                                    <option value="supervisor">Supervisor</option>
-                                </select>
+<select
+  onChange={(e) => updateRole(e.target.value)}
+  value={formData.role}
+  className="input input-bordered w-full mt-4 text-white bg-neutral-800 border-gray-600 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary"
+>
+  <option value="" className="text-gray-500">Select Role</option>
+  <option value="staff" className="text-white">Staff</option>
+  <option value="admin" className="text-white">Admin</option>
+  <option value="supervisor" className="text-white">Supervisor</option>
+</select>
+
+
+
+
+
                             </div>
 
                             <div className="mt-8">
