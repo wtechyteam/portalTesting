@@ -3,22 +3,18 @@ import { useDispatch } from "react-redux";
 import { showNotification } from "../../common/headerSlice";
 import { addNewLead } from "../leadSlice";
 import InputText from "@/components/input/input-text";
-import TextArea from "@/components/input/text-area";
 import ErrorText from "@/components/typography/error-text";
 import { Lead } from "@/helper/types";
 
-
 interface Props {
     closeModal: () => void;
-    extraObject : any
+    extraObject: any;
 }
 
 const INITIAL_LEAD_OBJ: Lead = {
-    first_name: "",
-    last_name: "",
+    name: "",
     email: "",
-    avatar : "",
-    description: "",
+    role: "", // Role added to the initial lead object
 };
 
 function AddLeadModalBody({ closeModal }: Props) {
@@ -28,16 +24,15 @@ function AddLeadModalBody({ closeModal }: Props) {
     const [leadObj, setLeadObj] = useState<Lead>(INITIAL_LEAD_OBJ);
 
     const saveNewLead = () => {
-        if (leadObj.first_name.trim() === "") return setErrorMessage("First Name is required!");
+        if (leadObj.name.trim() === "") return setErrorMessage("Name is required!");// Added validation for Name
         else if (leadObj.email.trim() === "") return setErrorMessage("Email id is required!");
+        else if (leadObj.role.trim() === "") return setErrorMessage("Role is required!"); // Added validation for Role
         else {
-            const newLeadObj : Lead = {
+            const newLeadObj: Lead = {
                 id: 7,
                 email: leadObj.email,
-                first_name: leadObj.first_name,
-                last_name: leadObj.last_name,
-                description: leadObj.description,
-                avatar: "https://reqres.in/img/faces/1-image.jpg"
+                name: leadObj.name,
+                role: leadObj.role,
             };
             dispatch(addNewLead({ newLeadObj }));
             dispatch(showNotification({ message: "New Lead Added!", status: 1 }));
@@ -45,20 +40,39 @@ function AddLeadModalBody({ closeModal }: Props) {
         }
     };
 
-    const updateFormValue = (updateType:string, value: string) => {
+    const updateFormValue = (updateType: string, value: string) => {
         setErrorMessage("");
         setLeadObj({ ...leadObj, [updateType]: value });
     };
 
     return (
         <>
-            <InputText type="text" defaultValue={leadObj.first_name} updateType="first_name" containerStyle="mt-4" labelTitle="First Name" updateFormValue={updateFormValue} />
+            <InputText
+                type="text"
+                value={leadObj.name}
+                updateType="name"
+                containerStyle="mt-4"
+                labelTitle="Name"
+                updateFormValue={updateFormValue}
+            />
 
-            <InputText type="text" defaultValue={leadObj.last_name} updateType="last_name" containerStyle="mt-4" labelTitle="Last Name" updateFormValue={updateFormValue} />
+            <InputText
+                type="email"
+                value={leadObj.email}
+                updateType="email"
+                containerStyle="mt-4"
+                labelTitle="Email Id"
+                updateFormValue={updateFormValue}
+            />
 
-            <InputText type="email" defaultValue={leadObj.email} updateType="email" containerStyle="mt-4" labelTitle="Email Id" updateFormValue={updateFormValue} />
-
-            <TextArea defaultValue={leadObj.description} updateType="description" containerStyle="mt-4" labelTitle="Description" updateFormValue={updateFormValue} />
+            <InputText
+                type="text"
+                value={leadObj.role} // New Role input field
+                updateType="role"
+                containerStyle="mt-4"
+                labelTitle="Role"
+                updateFormValue={updateFormValue}
+            />
 
             <ErrorText styleClass="mt-16">{errorMessage}</ErrorText>
             <div className="modal-action">

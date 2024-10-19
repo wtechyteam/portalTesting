@@ -15,6 +15,8 @@ import ArrowUpOnSquareIcon from '@heroicons/react/24/outline/ArrowUpOnSquareIcon
 import { getUserInfo } from '@/features/common/userSlice';
 import auth from '@/lib/auth';
 
+// Import statements...
+
 interface LeftSidebarProps {}
 
 function LeftSidebar(props: LeftSidebarProps) {
@@ -47,8 +49,10 @@ function LeftSidebar(props: LeftSidebarProps) {
     }, [pathname]);
 
     useEffect(() => {
-        const userId = "your-user-id"; // Replace this with the actual user ID or method to retrieve it
-        dispatch(getUserInfo(userId)); // Pass the required argument
+        const userId = auth.getUserId();
+        if (userId) {
+            dispatch(getUserInfo(userId)); // Dispatch action to fetch user info
+        }
     }, [dispatch]);
 
     const logoutUser = async () => {
@@ -75,24 +79,27 @@ function LeftSidebar(props: LeftSidebarProps) {
                 </li>
                 <div className="overflow-y-scroll pb-20 no-scrollbar" style={{ height: "85vh" }}>
                     {routes.map((route, k: number) => (
-                        <li className="" key={k}>
-                            {route.submenu ? (
-                                <SidebarSubmenu {...route} />
-                            ) : (
-                                <Link
-                                    href={route.path}
-                                    className={`${pathname === route.path ? 'font-semibold bg-base-200 ' : 'font-normal'}`}
-                                >
-                                    {route.icon} {route.pageName}
-                                    {pathname === route.path ? (
-                                        <span
-                                            className="absolute inset-y-0 left-0 w-1 rounded-tr-md rounded-br-md bg-primary"
-                                            aria-hidden="true"
-                                        ></span>
-                                    ) : null}
-                                </Link>
-                            )}
-                        </li>
+                        // Check if the user role is included in the allowed roles for this route
+                        route.role?.includes(user.role) && (
+                            <li className="" key={k}>
+                                {route.submenu ? (
+                                    <SidebarSubmenu {...route} />
+                                ) : (
+                                    <Link
+                                        href={route.path}
+                                        className={`${pathname === route.path ? 'font-semibold bg-base-200 ' : 'font-normal'}`}
+                                    >
+                                        {route.icon} {route.pageName}
+                                        {pathname === route.path ? (
+                                            <span
+                                                className="absolute inset-y-0 left-0 w-1 rounded-tr-md rounded-br-md bg-primary"
+                                                aria-hidden="true"
+                                            ></span>
+                                        ) : null}
+                                    </Link>
+                                )}
+                            </li>
+                        )
                     ))}
                 </div>
             </ul>
@@ -104,7 +111,7 @@ function LeftSidebar(props: LeftSidebarProps) {
                             <img src={user.avatar} alt={user.name} />
                         </div>
                     </div>
-                    <span className="ml-2">{user.name || 'User'}</span>
+                    <span className="ml-2">{user.name || 'User'} {user.role ? `(${user.role})` : ''}</span>
                     <ChevronUpIcon className='w-4 ' />
                 </div>
                 <ul tabIndex={0} className="dropdown-content visible w-52 px-4 z-[1] menu shadow bg-base-200 rounded-box ">

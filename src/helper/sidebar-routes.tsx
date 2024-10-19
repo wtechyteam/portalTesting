@@ -22,18 +22,21 @@ const routes: SidebarMenuObj[] = [
         icon: <Squares2X2Icon className={iconClasses} />,
         pageName: 'Dashboard',
         pageTitle: 'Dashboard',
+        role: ['admin', 'staff', 'supervisor'],
     },
     {
-        path: '/leads',
+        path: '/users',
         icon: <InboxArrowDownIcon className={iconClasses} />,
-        pageName: 'Leads',
-        pageTitle : "Leads"
+        pageName: 'Users',
+        pageTitle : "Users",
+        role: ['admin']
     },
     {
         path: '/settings',
         icon: <Cog6ToothIcon className={`${iconClasses} inline`} />,
         pageName: 'Settings',
         pageTitle : "",
+        role: ['admin', 'staff', 'supervisor'],
         submenu: [
             {
                 path: '/settings/billing',
