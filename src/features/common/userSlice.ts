@@ -9,7 +9,9 @@ export const getUserInfo = createAsyncThunk<UserProfile, string>(
     async (userId: string, thunkApi) => {
         try {
             const response = await axios.get<UserProfile>(`http://localhost:5000/api/users/${userId}`);
+            console.log(response.data)
             return response.data; // This returns { name, avatar, emailId }
+            
         } catch (error) {
             return thunkApi.rejectWithValue('Failed to fetch user info');
         }
@@ -82,6 +84,7 @@ const initialState: UserProfile & { token?: string } = {
     avatar: "",
     emailId: "",
     token: "",
+    role: ""
 };
 
 export const userSlice = createSlice({
@@ -101,6 +104,7 @@ export const userSlice = createSlice({
             console.log(action.payload)
             state.name = action.payload.name
             state.avatar = action.payload.avatar
+            state.role = action.payload.role;
             state.emailId = action.payload.emailId;
         });
         builder.addCase(getUserInfo.rejected, (state) => {

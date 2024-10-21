@@ -9,6 +9,7 @@ export interface SidebarMenuObj {
     pageName: string;
     pageTitle: string;
     submenu?: SubmenuItem[];
+    role: string[]
 }
 
 /**
@@ -40,6 +41,7 @@ export interface UserProfile {
   avatar: string;
   emailId: string;
   token?: string; 
+  role: string
 }
 
 
@@ -48,10 +50,8 @@ export interface UserProfile {
  * Interface for lead data.
  */
 export interface Lead {
-    first_name: string;
-    last_name: string;
-    description: string;
+    name: string;
     email: string;
-    avatar: string;
     id?: number;
+    role:string
 }
