@@ -107,14 +107,14 @@ function Login(): JSX.Element {
                 </button>
               </div>
             </form>
-            <div className="mt-4 text-center">
+            {/* <div className="mt-4 text-center">
               <p className="text-sm">
                 Don't have an account?{' '}
                 <Link href="/signup" className="text-primary underline">
                   Sign up here
                 </Link>
               </p>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

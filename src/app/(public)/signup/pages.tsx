@@ -7,9 +7,9 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/AuthProvider';
 import Link from 'next/link';
-import { registerUser } from './../../../features/common/userSlice';
+import { registerUser } from '../../../features/common/userSlice';
 import { useDispatch } from 'react-redux';
-import { AppDispatch } from './../../../lib/store';
+import { AppDispatch } from '../../../lib/store';
 
 interface SignupObj {
     emailId: string;
