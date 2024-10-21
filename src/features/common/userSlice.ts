@@ -18,6 +18,19 @@ export const getUserInfo = createAsyncThunk<UserProfile, string>(
     }
 );
 
+export const getUsers = createAsyncThunk<UserProfile[], void>(
+  "user/getUsers",
+  async (_, thunkApi) => {
+    try {
+      const response = await axios.get<UserProfile[]>('http://localhost:5000/api/users/');
+      return response.data; // Assuming this returns an array of UserProfile objects
+    } catch (error) {
+      return thunkApi.rejectWithValue('Failed to fetch users');
+    }
+  }
+);
+
+
 // userSlice.ts
 
 export const registerUser = createAsyncThunk<
@@ -78,13 +91,35 @@ export const loginUser = createAsyncThunk<
   }
 );
 
+export const deleteUser = createAsyncThunk<
+  string, // Return type
+  string, // Argument type: user ID to delete
+  { rejectValue: string } // Reject value type
+>(
+  'user/deleteUser',
+  async (userId, { rejectWithValue }) => {
+    try {
+      const response = await axios.delete(`http://localhost:5000/api/users/${userId}`);
+      if (response.status !== 200) {
+        throw new Error('Failed to delete user');
+      }
+      return userId; // Return the userId to delete it from the state
+    } catch (error) {
+      if (error instanceof Error) {
+        return rejectWithValue(error.message);
+      }
+      return rejectWithValue('Something went wrong');
+    }
+  }
+);
 
-const initialState: UserProfile & { token?: string } = {
-    name: "",
-    avatar: "",
-    emailId: "",
-    token: "",
-    role: ""
+const initialState: UserProfile & { token?: string; leads: UserProfile[] } = {
+  name: "",
+  avatar: "",
+  emailId: "",
+  token: "",
+  role: "",
+  leads: [], // Add leads array to the initial state
 };
 
 export const userSlice = createSlice({
@@ -108,13 +143,19 @@ export const userSlice = createSlice({
             state.emailId = action.payload.emailId;
         });
         builder.addCase(getUserInfo.rejected, (state) => {
-
         });
+
+        builder.addCase(getUsers.fulfilled, (state, action) => {
+        
+          state.leads = action.payload; 
+      });
+      
         builder.addCase(registerUser.fulfilled, (state, action) => {
             state.name = action.payload.name;
             state.avatar = action.payload.avatar;
             state.emailId = action.payload.emailId;
             state.token = action.payload.token;
+            
         });
         builder.addCase(loginUser.fulfilled, (state, action) => {
             state.name = action.payload.name;
@@ -122,6 +163,11 @@ export const userSlice = createSlice({
             state.emailId = action.payload.emailId;
             state.token = action.payload.token;
         });
+        builder.addCase(deleteUser.fulfilled, (state, action) => {
+          // Ensure lead.id is defined and convert it to a string for comparison
+          state.leads = state.leads.filter(lead => lead.id && lead.id.toString() !== action.payload);
+      });
+      
         
     }
 });

@@ -37,13 +37,29 @@ export interface APIResponse {
  * Interface for UserProfile data.
  */
 export interface UserProfile {
+    _id: string;
     name: string;
+    id?: string;
   avatar: string;
   emailId: string;
   token?: string; 
   role: string
 }
 
+// Assuming this is in your types file or wherever you define your types
+export interface Question {
+    _id: string; // Add this if you expect an ID
+    text: string;
+    askedForUserId: string; // ID of the user for whom the question is asked
+    createdAt: string; // Timestamps from Mongoose
+    updatedAt: string; // Timestamps from Mongoose
+  }
+  
+export interface User {
+    _id: string;
+    name: string;
+    emailId: string;
+}
 
 
 /**
@@ -53,5 +69,6 @@ export interface Lead {
     name: string;
     email: string;
     id?: number;
-    role:string
+    role:string;
+    password: string
 }

@@ -3,6 +3,7 @@ import { useAppDispatch, useAppSelector } from '@/lib/hooks';
 import { MODAL_BODY_TYPES } from '@/helper/app-constants';
 import AddLeadModalBody from '@/features/leads/components/add-lead-modal-body';
 import ConfirmationModalBody from './confirmation-modal-body';
+import AddQuestionModalBody from '@/features/questions/components/add-new-question-modal';
 
 function ModalLayout() {
     const { isOpen, bodyType, size, extraObject, title } = useAppSelector((state) => state.modal);
@@ -27,6 +28,7 @@ function ModalLayout() {
                         {
                             [MODAL_BODY_TYPES.LEAD_ADD_NEW]: <AddLeadModalBody closeModal={close} extraObject={extraObject} />,
                             [MODAL_BODY_TYPES.CONFIRMATION]: <ConfirmationModalBody extraObject={extraObject} closeModal={close} />,
+                            [MODAL_BODY_TYPES.QUESTION_ADD_NEW]:<AddQuestionModalBody closeModal={close} extraObject={extraObject}  />,
                             [MODAL_BODY_TYPES.DEFAULT]: <div></div>
                         }[bodyType]
                     }

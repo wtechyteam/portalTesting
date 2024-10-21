@@ -135,16 +135,16 @@ function Signup(): JSX.Element {
                                 />
 
 
-<select
-  onChange={(e) => updateRole(e.target.value)}
-  value={formData.role}
-  className="input input-bordered w-full mt-4 text-white bg-neutral-800 border-gray-600 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary"
->
-  <option value="" className="text-gray-500">Select Role</option>
-  <option value="staff" className="text-white">Staff</option>
-  <option value="admin" className="text-white">Admin</option>
-  <option value="supervisor" className="text-white">Supervisor</option>
-</select>
+                                <select
+                                    onChange={(e) => updateRole(e.target.value)}
+                                    value={formData.role}
+                                    className="input input-bordered w-full mt-4 text-white bg-neutral-800 border-gray-600 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary"
+                                >
+                                    <option value="" className="text-gray-500">Select Role</option>
+                                    <option value="staff" className="text-white">Staff</option>
+                                    <option value="admin" className="text-white">Admin</option>
+                                    <option value="supervisor" className="text-white">Supervisor</option>
+                                </select>
 
 
 

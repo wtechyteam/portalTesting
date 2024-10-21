@@ -3,22 +3,26 @@ import { useAppDispatch } from '@/lib/hooks';
 import { deleteLead } from '@/features/leads/leadSlice';
 import { showNotification } from '@/features/common/headerSlice';
 
-
 interface Props {
-    extraObject?: any;
+    extraObject?: { message?: string; type?: string; index?: number }; // Define the expected shape of extraObject
     closeModal: () => void;
 }
 
-function ConfirmationModalBody({ extraObject, closeModal }: Props) {
+function ConfirmationModalBody({ extraObject = {}, closeModal }: Props) {
     const dispatch = useAppDispatch();
 
-    const { message, type, index } = extraObject;
+    // Destructure with a default value
+    const { message = "Are you sure you want to proceed?", type, index } = extraObject;
 
     const proceedWithYes = async () => {
+        // Check if type is for deletion and index is defined
         if (type === CONFIRMATION_MODAL_CLOSE_TYPES.LEAD_DELETE) {
-            // positive response, call api or dispatch redux function
-            dispatch(deleteLead({ index }));
-            dispatch(showNotification({ message: "Lead Deleted!", status: 1 }));
+            if (index !== undefined) {
+                dispatch(deleteLead({ index })); // Ensure index is defined
+                dispatch(showNotification({ message: "Lead Deleted!", status: 1 }));
+            } else {
+                console.error("Index is undefined, cannot delete lead.");
+            }
         }
         closeModal();
     };
@@ -30,8 +34,8 @@ function ConfirmationModalBody({ extraObject, closeModal }: Props) {
             </p>
 
             <div className="modal-action mt-12">
-                <button className="btn btn-outline" onClick={() => closeModal()}>Cancel</button>
-                <button className="btn btn-primary w-36" onClick={() => proceedWithYes()}>Yes</button>
+                <button className="btn btn-outline" onClick={closeModal}>Cancel</button>
+                <button className="btn btn-primary w-36" onClick={proceedWithYes}>Yes</button>
             </div>
         </>
     );

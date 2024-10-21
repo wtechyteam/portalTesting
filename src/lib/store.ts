@@ -3,6 +3,7 @@ import modalSlice from '@/features/common/modalSlice'
 import rightDrawerSlice from '@/features/common/rightDrawerSlice'
 import userSlice from '@/features/common/userSlice'
 import leadSlice from '@/features/leads/leadSlice'
+import questionSlice from '@/features/common/questionSlice'
 
 import { configureStore } from '@reduxjs/toolkit'
 
@@ -13,7 +14,8 @@ export const makeStore = () => {
       rightDrawer : rightDrawerSlice,
       leads : leadSlice,
       modal : modalSlice,
-      user : userSlice
+      user : userSlice,
+      question : questionSlice
     }
   })
 }
